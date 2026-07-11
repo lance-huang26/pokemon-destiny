@@ -1,0 +1,416 @@
+.screen {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+/* ---------- 首頁 / 世代選擇 ---------- */
+.home-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.home-head h1 {
+  font-size: clamp(28px, 6vw, 48px);
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--accent), #ffe98a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.home-head p {
+  margin-top: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.gen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+.gen-card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  min-width: 0; /* 允許在窄螢幕縮小，避免撐破版面 */
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.gen-card:hover {
+  transform: translateY(-4px);
+  background: var(--card-hover);
+  border-color: var(--accent);
+}
+.gen-card--all {
+  border-color: rgba(255, 203, 5, 0.35);
+  background: linear-gradient(160deg, rgba(255, 203, 5, 0.12), var(--card));
+}
+.gen-samples {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  height: 72px;
+  overflow: hidden;
+}
+.gen-samples img {
+  width: 64px;
+  height: 64px;
+  min-width: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+}
+.gen-samples img:nth-child(2) {
+  transform: scale(1.15);
+  z-index: 1;
+}
+.gen-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.gen-title {
+  font-weight: 700;
+  font-size: 18px;
+}
+.gen-count {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- 對戰畫面 ---------- */
+.battle-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.battle-stage {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.battle-stage strong {
+  color: var(--accent);
+}
+.battle-stage span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.ghost {
+  color: var(--muted);
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.ghost:hover {
+  background: var(--card);
+  color: var(--text);
+}
+
+.progress {
+  height: 6px;
+  background: var(--card);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width 0.25s ease;
+}
+.battle-prompt {
+  text-align: center;
+  color: var(--muted);
+  margin: 24px 0;
+}
+
+.arena {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.mon-card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease,
+    filter 0.2s ease;
+}
+.mon-card:disabled {
+  pointer-events: none;
+}
+.mon-card:hover,
+.mon-card:focus-visible {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--accent);
+  background: var(--card-hover);
+  outline: none;
+}
+.mon-card:active {
+  transform: scale(0.98);
+}
+.mon-img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+.mon-img img {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.45));
+}
+.mon-name {
+  font-size: clamp(18px, 4vw, 26px);
+  font-weight: 800;
+}
+.mon-no {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.vs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--danger);
+  color: #fff;
+  font-weight: 900;
+  font-style: italic;
+  padding: 8px 12px;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(255, 89, 100, 0.5);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.arena.decided .vs {
+  opacity: 0;
+}
+
+/* 勝出 / 落敗動畫 */
+.mon-card.win {
+  border-color: var(--accent);
+  background: var(--card-hover);
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 0 48px rgba(255, 203, 5, 0.5);
+  animation: winPulse 0.55s ease;
+}
+.mon-card.lose {
+  opacity: 0.32;
+  filter: grayscale(0.85);
+  transform: scale(0.9);
+}
+@keyframes winPulse {
+  40% {
+    transform: translateY(-8px) scale(1.1);
+  }
+}
+.mute {
+  min-width: 72px;
+  text-align: right;
+  font-size: 20px;
+}
+.win-badge {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #1a1400;
+  font-weight: 900;
+  padding: 4px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  animation: badgePop 0.3s ease;
+}
+@keyframes badgePop {
+  from {
+    transform: translate(-50%, -8px) scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* 階段轉場動畫 */
+.stage-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 9, 22, 0.72);
+  backdrop-filter: blur(6px);
+  z-index: 50;
+  animation: ovFade 0.35s ease;
+}
+@keyframes ovFade {
+  from {
+    opacity: 0;
+  }
+}
+.stage-overlay-inner {
+  text-align: center;
+  animation: ovPop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+@keyframes ovPop {
+  from {
+    transform: scale(0.6) translateY(20px);
+    opacity: 0;
+  }
+}
+.stage-kick {
+  display: block;
+  color: var(--muted);
+  font-size: 24px;
+  letter-spacing: 6px;
+  margin-bottom: 8px;
+}
+.stage-big {
+  display: block;
+  font-size: clamp(56px, 16vw, 120px);
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 8px 40px rgba(255, 203, 5, 0.4);
+}
+
+/* ---------- 結算畫面 ---------- */
+.result {
+  text-align: center;
+}
+.result-kicker {
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.champion {
+  margin: 8px auto 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.champion-img {
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, rgba(255, 203, 5, 0.25), transparent 65%);
+}
+.champion-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5));
+  animation: pop 0.5s ease;
+}
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+.champion-name {
+  font-size: clamp(28px, 7vw, 44px);
+  font-weight: 900;
+}
+.crown {
+  margin-right: 8px;
+}
+.champion-no {
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.rank-title {
+  font-size: 18px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.rank-list {
+  list-style: none;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rank-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+.rank-no {
+  width: 32px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 16px;
+}
+.rank-list img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+.rank-name {
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+}
+.rank-wins {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.result-actions {
+  margin-top: 32px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.primary {
+  background: var(--accent);
+  color: #1a1400;
+  font-weight: 800;
+  padding: 14px 24px;
+  border-radius: 12px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+.primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+@media (max-width: 480px) {
+  .gen-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .gen-card {
+    padding: 12px;
+  }
+  .gen-samples {
+    height: 52px;
+  }
+  .gen-samples img {
+    width: 44px;
+    height: 44px;
+  }
+  .gen-title {
+    font-size: 16px;
+  }
+  .mon-name {
+    font-size: 18px;
+  }
+}

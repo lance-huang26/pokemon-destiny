@@ -1,0 +1,43 @@
+:root {
+  --bg-0: #0f1020;
+  --accent: #ffcb05; /* 寶可夢黃 */
+  --accent-2: #3d7dca; /* 寶可夢藍 */
+  --text: #f5f5fb;
+  --muted: #a3a4c2;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-hover: rgba(255, 255, 255, 0.12);
+  font-family: system-ui, -apple-system, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC",
+    sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(1200px 800px at 20% -10%, #2a2c6b 0%, transparent 55%),
+    radial-gradient(1000px 700px at 100% 0%, #3d1d5c 0%, transparent 50%), var(--bg-0);
+  color: var(--text);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  color: inherit;
+  border: none;
+  background: none;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
