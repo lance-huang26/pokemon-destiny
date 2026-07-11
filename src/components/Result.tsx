@@ -5,13 +5,15 @@ import { drawShareCard } from "../shareCard";
 interface Props {
   ranking: Contestant[];
   genLabel: string;
+  canUndo: boolean;
+  onUndo: () => void;
   onReplay: () => void;
   onHome: () => void;
 }
 
 const MEDAL = ["🥇", "🥈", "🥉"];
 
-export default function Result({ ranking, genLabel, onReplay, onHome }: Props) {
+export default function Result({ ranking, genLabel, canUndo, onUndo, onReplay, onHome }: Props) {
   const champ = ranking[0];
   const rest = ranking.slice(1, 10);
   const [saving, setSaving] = useState(false);
@@ -70,6 +72,11 @@ export default function Result({ ranking, genLabel, onReplay, onHome }: Props) {
         <button className="primary" onClick={handleDownload} disabled={saving}>
           {saving ? "產生中…" : "📸 下載冠軍分享圖"}
         </button>
+        {canUndo && (
+          <button className="ghost" onClick={onUndo}>
+            ↩ 上一步（重選冠軍）
+          </button>
+        )}
         <button className="ghost" onClick={onReplay}>
           再玩一次（同世代）
         </button>

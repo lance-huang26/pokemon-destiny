@@ -100,15 +100,24 @@
   font-size: 13px;
   color: var(--muted);
 }
+.bar-left {
+  display: flex;
+  gap: 4px;
+}
 .ghost {
   color: var(--muted);
   font-size: 14px;
   padding: 8px 12px;
   border-radius: 10px;
 }
-.ghost:hover {
+.ghost:hover:not(:disabled) {
   background: var(--card);
   color: var(--text);
+}
+.ghost:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
 }
 
 .progress {

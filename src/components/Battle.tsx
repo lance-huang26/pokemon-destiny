@@ -12,8 +12,10 @@ interface Props {
   totalBattles: number;
   locked: boolean; // 階段動畫期間鎖定
   muted: boolean;
+  canUndo: boolean;
   onToggleMute: () => void;
   onPick: (side: 0 | 1) => void;
+  onUndo: () => void;
   onQuit: () => void;
 }
 
@@ -29,11 +31,14 @@ export default function Battle({
   totalBattles,
   locked,
   muted,
+  canUndo,
   onToggleMute,
   onPick,
+  onUndo,
   onQuit,
 }: Props) {
   const [picked, setPicked] = useState<0 | 1 | null>(null);
+  const canUndoNow = canUndo && !locked && picked === null;
 
   // 換對戰組合時重置動畫狀態
   useEffect(() => {
@@ -54,19 +59,28 @@ export default function Battle({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") select(0);
       else if (e.key === "ArrowRight") select(1);
+      else if (e.key === "Backspace" && canUndoNow) {
+        e.preventDefault();
+        onUndo();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [select]);
+  }, [select, canUndoNow, onUndo]);
 
   const pct = totalBattles > 0 ? Math.round((battlesDone / totalBattles) * 100) : 0;
 
   return (
     <div className="screen battle">
       <div className="battle-bar">
-        <button className="ghost" onClick={onQuit}>
-          ← 換世代
-        </button>
+        <div className="bar-left">
+          <button className="ghost" onClick={onQuit}>
+            ← 換世代
+          </button>
+          <button className="ghost" onClick={onUndo} disabled={!canUndoNow}>
+            ↩ 上一步
+          </button>
+        </div>
         <div className="battle-stage">
           <strong>
             {genLabel} · {stage}
@@ -85,7 +99,7 @@ export default function Battle({
         <div className="progress-fill" style={{ width: `${pct}%` }} />
       </div>
 
-      <p className="battle-prompt">你比較喜歡哪一隻？（← / → 鍵也可以選）</p>
+      <p className="battle-prompt">你比較喜歡哪一隻？（← / → 選擇，Backspace 上一步）</p>
 
       <div className={`arena${picked !== null ? " decided" : ""}`}>
         {pair.map((m, i) => {

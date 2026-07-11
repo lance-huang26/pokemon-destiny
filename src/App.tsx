@@ -13,6 +13,7 @@ const DATA = rawData as Mon[];
 export default function App() {
   const [gen, setGen] = useState<number | "all">(1);
   const [state, setState] = useState<TournamentState | null>(null);
+  const [history, setHistory] = useState<TournamentState[]>([]); // 每一步的賽況快照，供「上一步」回退
   const [overlay, setOverlay] = useState<string | null>(null);
   const [muted, setMutedState] = useState(isMuted());
   const lastRound = useRef(0);
@@ -24,16 +25,33 @@ export default function App() {
     lastRound.current = 0;
     championFired.current = false;
     setOverlay(null);
+    setHistory([]);
     setState(createTournament(mons));
   }, []);
 
-  const pick = useCallback((side: 0 | 1) => {
-    setState((prev) => (prev ? choose(prev, side) : prev));
-  }, []);
+  const pick = useCallback(
+    (side: 0 | 1) => {
+      if (!state) return;
+      setHistory((h) => [...h, state]); // 前進前先存檔
+      setState(choose(state, side));
+    },
+    [state],
+  );
+
+  const undo = useCallback(() => {
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    lastRound.current = prev.round; // 回退不要再觸發階段動畫
+    championFired.current = false; // 若從冠軍返回，之後可再次播放音效
+    setOverlay(null);
+    setState(prev);
+    setHistory(history.slice(0, -1));
+  }, [history]);
 
   const goHome = useCallback(() => {
     setState(null);
     setOverlay(null);
+    setHistory([]);
   }, []);
 
   const toggleMute = useCallback(() => {
@@ -78,6 +96,8 @@ export default function App() {
       <Result
         ranking={ranking(state)}
         genLabel={genLabel}
+        canUndo={history.length > 0}
+        onUndo={undo}
         onReplay={() => start(gen)}
         onHome={goHome}
       />
@@ -101,8 +121,10 @@ export default function App() {
         totalBattles={state.totalBattles}
         locked={overlay != null}
         muted={muted}
+        canUndo={history.length > 0}
         onToggleMute={toggleMute}
         onPick={pick}
+        onUndo={undo}
         onQuit={goHome}
       />
       {overlay && (
