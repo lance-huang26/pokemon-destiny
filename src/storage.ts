@@ -16,6 +16,7 @@ export interface GenRecord {
   genKey: string; // "all" 或 "1".."9"
   genLabel: string;
   savedAt: number;
+  plays: number; // 完成過幾次
   top: SavedMon[];
 }
 
@@ -43,12 +44,14 @@ export function saveRecord(
   genLabel: string,
   ranking: Contestant[],
   savedAt: number,
+  plays: number,
 ): void {
   const map = loadAll();
   map[genKey] = {
     genKey,
     genLabel,
     savedAt,
+    plays,
     top: ranking.slice(0, TOP_N).map((m) => ({
       id: m.id,
       dex: m.dex,

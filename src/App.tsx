@@ -21,12 +21,14 @@ export default function App() {
   const [muted, setMutedState] = useState(isMuted());
   const lastRound = useRef(0);
   const championFired = useRef(false);
+  const playCounted = useRef(false); // 本局是否已計入「做過次數」（避免上一步重選灌水）
 
   const start = useCallback((g: number | "all") => {
     const mons = g === "all" ? DATA : DATA.filter((m) => m.gen === g);
     setGen(g);
     lastRound.current = 0;
     championFired.current = false;
+    playCounted.current = false;
     setOverlay(null);
     setHistory([]);
     setShowRecords(false);
@@ -85,13 +87,16 @@ export default function App() {
 
   const genLabel = gen === "all" ? "全國圖鑑" : `第 ${gen} 世代`;
 
-  // 冠軍誕生：播音效並存進本機紀錄（只做一次）
+  // 冠軍誕生：播音效並存進本機紀錄
   useEffect(() => {
     if (state?.champion && !championFired.current) {
       championFired.current = true;
       playChampion();
       const genKey = gen === "all" ? "all" : String(gen);
-      saveRecord(genKey, genLabel, ranking(state), Date.now());
+      const prevPlays = loadAll()[genKey]?.plays ?? 0;
+      const plays = prevPlays + (playCounted.current ? 0 : 1); // 上一步重選冠軍不重複計次
+      playCounted.current = true;
+      saveRecord(genKey, genLabel, ranking(state), Date.now(), plays);
     }
   }, [state, gen, genLabel]);
 
