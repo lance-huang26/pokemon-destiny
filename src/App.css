@@ -29,6 +29,7 @@
   gap: 16px;
 }
 .gen-card {
+  position: relative;
   background: var(--card);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
@@ -38,6 +39,35 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+.gen-champ {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(255, 203, 5, 0.14);
+  border-radius: 8px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.records-btn {
+  margin-top: 18px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 999px;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.records-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
 }
 .gen-card:hover {
   transform: translateY(-4px);
@@ -100,9 +130,27 @@
   font-size: 13px;
   color: var(--muted);
 }
-.bar-left {
+.bar-right {
   display: flex;
   gap: 4px;
+  align-items: center;
+}
+.icon-btn {
+  font-size: 20px;
+  min-width: 44px;
+  text-align: center;
+}
+.quit-btn {
+  color: var(--muted);
+  opacity: 0.6;
+}
+.quit-btn:hover:not(:disabled) {
+  color: var(--danger);
+  background: rgba(255, 89, 100, 0.12);
+  opacity: 1;
+}
+.undo-btn {
+  font-weight: 700;
 }
 .ghost {
   color: var(--muted);
@@ -400,6 +448,135 @@
 .primary:hover {
   transform: translateY(-2px);
   filter: brightness(1.05);
+}
+
+/* 確認對話框 */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(8, 9, 22, 0.72);
+  backdrop-filter: blur(6px);
+  z-index: 60;
+  animation: ovFade 0.2s ease;
+}
+.confirm-box {
+  background: #1a1b38;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 28px 24px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  animation: ovPop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+.confirm-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.confirm-text {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+.confirm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.danger-btn {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(255, 89, 100, 0.5);
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 12px;
+  transition: background 0.12s ease;
+}
+.danger-btn:hover {
+  background: rgba(255, 89, 100, 0.12);
+}
+
+/* 我的紀錄 */
+.records-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.records-head h1 {
+  font-size: clamp(22px, 5vw, 32px);
+  color: var(--accent);
+}
+.records-empty {
+  text-align: center;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-top: 60px;
+}
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.record-card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 18px;
+}
+.record-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.record-gen {
+  font-size: 18px;
+  font-weight: 800;
+  margin-right: 10px;
+}
+.record-date {
+  font-size: 12px;
+  color: var(--muted);
+}
+.del {
+  font-size: 13px;
+}
+.del:hover {
+  color: var(--danger);
+}
+.record-top {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.record-top li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.record-top li.is-champ {
+  background: rgba(255, 203, 5, 0.12);
+}
+.record-top img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.record-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 480px) {

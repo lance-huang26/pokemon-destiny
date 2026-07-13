@@ -38,6 +38,7 @@ export default function Battle({
   onQuit,
 }: Props) {
   const [picked, setPicked] = useState<0 | 1 | null>(null);
+  const [confirmQuit, setConfirmQuit] = useState(false);
   const canUndoNow = canUndo && !locked && picked === null;
 
   // 換對戰組合時重置動畫狀態
@@ -73,14 +74,9 @@ export default function Battle({
   return (
     <div className="screen battle">
       <div className="battle-bar">
-        <div className="bar-left">
-          <button className="ghost" onClick={onQuit}>
-            ← 換世代
-          </button>
-          <button className="ghost" onClick={onUndo} disabled={!canUndoNow}>
-            ↩ 上一步
-          </button>
-        </div>
+        <button className="ghost undo-btn" onClick={onUndo} disabled={!canUndoNow}>
+          ↩ 上一步
+        </button>
         <div className="battle-stage">
           <strong>
             {genLabel} · {stage}
@@ -90,9 +86,19 @@ export default function Battle({
             總場次 {battlesDone} / {totalBattles}
           </span>
         </div>
-        <button className="ghost mute" onClick={onToggleMute} aria-label="靜音切換">
-          {muted ? "🔇" : "🔊"}
-        </button>
+        <div className="bar-right">
+          <button className="ghost icon-btn" onClick={onToggleMute} aria-label="靜音切換">
+            {muted ? "🔇" : "🔊"}
+          </button>
+          <button
+            className="ghost icon-btn quit-btn"
+            onClick={() => setConfirmQuit(true)}
+            aria-label="離開，換世代"
+            title="離開，換世代"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
       <div className="progress">
@@ -123,6 +129,27 @@ export default function Battle({
         })}
         <div className="vs">VS</div>
       </div>
+
+      {confirmQuit && (
+        <div className="confirm-overlay" onClick={() => setConfirmQuit(false)}>
+          <div className="confirm-box" onClick={(e) => e.stopPropagation()}>
+            <p className="confirm-title">確定要離開嗎？</p>
+            <p className="confirm-text">
+              換世代會放棄目前的對戰進度，
+              <br />
+              但這個世代之前存過的紀錄不受影響。
+            </p>
+            <div className="confirm-actions">
+              <button className="primary" onClick={() => setConfirmQuit(false)}>
+                繼續對戰
+              </button>
+              <button className="danger-btn" onClick={onQuit}>
+                離開換世代
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
